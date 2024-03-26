@@ -43,6 +43,7 @@ public class UiController {
         if(users!=null){
             response=users.get(userid);
         }
+
         if(response!=null)
         return new ResponseEntity<>(response,HttpStatus.OK);
         else
