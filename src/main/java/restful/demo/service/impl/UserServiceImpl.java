@@ -2,39 +2,50 @@ package restful.demo.service.impl;
 
 import java.util.Map;
 import java.util.HashMap;
-import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import restful.demo.model.request.UserRequest;
 import restful.demo.model.response.UserResponse;
 import restful.demo.service.UserService;
+import restful.demo.utils.Utils;
 
 @Service
-public class UserServiceImpl implements UserService{
-    Map<String,UserResponse> users=null;
+public class UserServiceImpl implements UserService {
+
+    public UserServiceImpl() {
+
+    }
+    @Autowired
+    public UserServiceImpl(Utils util) {
+        util = this.util;
+    }
+
+    Map<String, UserResponse> users = null;
+    Utils util;
 
     @Override
     public UserResponse createUser(UserRequest user) {
 
-      UserResponse response=new UserResponse(user.getFirstName(),user.getLastname(),user.getEmail());
+        UserResponse response = new UserResponse(user.getFirstName(), user.getLastname(), user.getEmail());
 
-        if(users==null)
-        users=new HashMap<String,UserResponse>();
-        String userId=UUID.randomUUID().toString();
+        if (users == null)
+            users = new HashMap<String, UserResponse>();
+        String userId = util.generateUserId();
         response.setUserid(userId);
-        users.put(userId,response);
+        users.put(userId, response);
 
         return response;
     }
 
     @Override
     public void deleteUser(String userId) {
-        if(users!=null){
-            if(users.get(userId)!=null){
+        if (users != null) {
+            if (users.get(userId) != null) {
                 users.remove(userId);
             }
-        }    
+        }
     }
 
     @Override
@@ -72,9 +83,9 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserResponse getUser(String userid) {
-        UserResponse response=null;
-        if(users!=null){
-            response=users.get(userid);
+        UserResponse response = null;
+        if (users != null) {
+            response = users.get(userid);
         }
 
         return response;
@@ -85,5 +96,5 @@ public class UserServiceImpl implements UserService{
     public Map<String, UserResponse> getUsers(int page, int limit) {
         return users;
     }
-    
+
 }
